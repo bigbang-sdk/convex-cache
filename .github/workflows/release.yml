@@ -1,0 +1,22 @@
+name: Release
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+      - dev
+
+permissions:
+  contents: write
+  packages: write
+  pull-requests: write
+  statuses: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: bigbang-sdk/github-actions/npm-release@main
+        with:
+          npm-token: ${{ secrets.NPM_TOKEN }}
