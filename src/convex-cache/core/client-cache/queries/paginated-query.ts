@@ -3,9 +3,9 @@ import { useQueryKey } from "../helpers/hooks/use-query-key";
 import { useClientCache } from "../helpers/hooks/use-client-cache";
 import { getFunctionName } from "convex/server";
 import { useMemo } from "react";
-import { fetchSchemaFromMap } from "../helpers/utils/fetch-schema-from-map";
-import { PQ_Query, PQ_Args, PQ_Result, PQ_Item, PQ_CachedResult } from "../../types/types/paginated-query";
+import { PQ_Query, PQ_Args, PQ_Result, PQ_CachedResult } from "../../types/types/paginated-query";
 import { ZSchemaMap } from "../../../../convex";
+import { fetchSchemaFromMap } from "../../helpers/utils/fetch-schema-from-map";
 import { useLocalDb as useLocalDbDefault } from "@bigbang-sdk/local-db";
 
 export type T_UseCachedPaginatedQueryClient<Q extends PQ_Query> = {
@@ -17,20 +17,20 @@ export type T_UseCachedPaginatedQueryClient<Q extends PQ_Query> = {
 };
 
 export const _useCachedPaginatedQueryClient = <Q extends PQ_Query>({ query, args, options, schemaMap, useLocalDb }: T_UseCachedPaginatedQueryClient<Q>): PQ_Result<Q> => {
-  const fnKey = useMemo(() => getFunctionName(query), [query]);
+  const queryName = useMemo(() => getFunctionName(query), [query]);
 
   const schema = useMemo(
     () =>
       fetchSchemaFromMap({
-        fnKey,
+        queryName,
         schemaMap,
         type: "paginated",
       }),
-    [fnKey, schemaMap]
+    [queryName, schemaMap]
   );
 
   const raw = usePaginatedQuery(query, args, options);
-  const storageKey = useQueryKey({ fnKey, args, kind: "paginated" });
+  const storageKey = useQueryKey({ queryName, args, kind: "paginated" });
 
   const cacheInput =
     raw.status === "LoadingFirstPage"

@@ -7,7 +7,7 @@ import { Q_ArgsPreloaded } from "../../../adapters/next/types/preloaded";
 export type T_UseCachedQueryServer<Q extends Q_Query> = {
   query: Q;
   args: Q_Args<Q>;
-  preloadedData: Q_Result<Q>;
+  preloadedData: Q_Result<Q> | undefined;
   revalidateCache: ({ query, args }: { query: Q; args: Q_ArgsPreloaded<Q> }) => void;
 };
 

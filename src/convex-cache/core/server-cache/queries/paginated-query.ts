@@ -8,7 +8,7 @@ export type T_UseCachedPaginatedQueryServer<Q extends PQ_Query> = {
   query: Q;
   args: PQ_Args<Q>;
   options: { initialNumItems: number };
-  preloadedData: PQ_CachedResult<Q>;
+  preloadedData: PQ_CachedResult<Q> | undefined;
   revalidateCache: ({ query, args }: { query: Q; args: PQ_ArgsPreloaded<Q> }) => void;
 };
 
@@ -24,5 +24,5 @@ export const _useCachedPaginatedQueryServer = <Q extends PQ_Query>({ query, args
     revalidateCache({ query, args: { ...args, paginationOpts: { numItems: options.initialNumItems, cursor: null } } as PQ_ArgsPreloaded<Q> });
   }, [raw]);
 
-  return raw.status == "LoadingFirstPage" ? ({ ...preloadedData, loadMore: () => {} } as PQ_Result<Q>) : raw;
+  return raw.status == "LoadingFirstPage" ? ({ ...(preloadedData ?? { results: [], status: "LoadingFirstPage", isLoading: false }), loadMore: () => {} } as PQ_Result<Q>) : raw;
 };

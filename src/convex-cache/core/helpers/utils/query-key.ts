@@ -3,18 +3,18 @@ import { deepSort } from "@bigbang-sdk/deep-sort";
 import crypto from "crypto";
 
 type T_MakeQueryKey = {
-  fnKey: string;
+  queryName: string;
   args: unknown;
   kind: "query" | "paginated";
 };
 
-export const makeQueryKey = ({ fnKey, args, kind }: T_MakeQueryKey) => {
+export const makeQueryKey = ({ queryName, args, kind }: T_MakeQueryKey) => {
   const ns = kind === "paginated" ? "pq" : "q";
 
   const sortedArgs = deepSort(args);
   const argKey = superjson.stringify(sortedArgs);
 
-  const queryKey = `${ns}:${fnKey}:${argKey}`;
+  const queryKey = `${ns}:${queryName}:${argKey}`;
 
   return {
     key: queryKey,

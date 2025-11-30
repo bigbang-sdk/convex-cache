@@ -24,12 +24,10 @@ export const convertPaginatedSchemaForClient = <ServerSchema extends ZodType<T_S
     if (objShape && objShape.page instanceof ZodArray) {
       itemSchema = objShape.page.element as ZodType<Item>;
     } else {
-      console.warn("[convertPaginatedSchemaForClient] Server schema object has no `page` array; falling back to z.any() for items.", schema);
-      itemSchema = z.any() as ZodType<Item>;
+      throw new Error("[convertPaginatedSchemaForClient] Schema object has no `page` array;");
     }
   } else {
-    console.warn("[convertPaginatedSchemaForClient] Server schema is not a ZodObject; falling back to z.any() for items.", schema);
-    itemSchema = z.any() as ZodType<Item>;
+    throw new Error("[convertPaginatedSchemaForClient] Schema is not a ZodObject;");
   }
 
   // Base part shared by all cacheable paginated variants (no loadMore)

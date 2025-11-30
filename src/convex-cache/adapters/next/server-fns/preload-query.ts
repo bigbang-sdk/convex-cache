@@ -16,7 +16,7 @@ type T_PreloadQueryParams<Q extends Q_Query> = {
 export const _preloadQuery = async ({ queryName, args, options }: T_PreloadQueryParams<Q_Query>): Promise<Q_Result<Q_Query>> => {
   "use cache";
 
-  const { tag } = makeQueryKey({ fnKey: queryName, args, kind: "query" });
+  const { tag } = makeQueryKey({ queryName, args, kind: "query" });
   cacheTag(tag);
   cacheLife(defaultCacheProfile);
 
@@ -37,7 +37,7 @@ type T_PreloadPaginatedQueryParams<Q extends PQ_Query> = {
 export const _preloadPaginatedQuery = async ({ queryName, args, options }: T_PreloadPaginatedQueryParams<PQ_Query>): Promise<PQ_CachedResult<PQ_Query>> => {
   "use cache";
 
-  const { tag } = makeQueryKey({ fnKey: queryName, args, kind: "paginated" });
+  const { tag } = makeQueryKey({ queryName, args, kind: "paginated" });
   cacheTag(tag);
   cacheLife(defaultCacheProfile);
 
