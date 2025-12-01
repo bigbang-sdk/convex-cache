@@ -163,78 +163,7 @@ function UserProfile({ userId }) {
 
 ## API Reference
 
-### Client Hooks (`convex-cache/react`)
-
-#### `useCachedQueryClient`
-
-Hook for using cached queries in React client components. Results are cached in IndexedDb and automatically revalidated when data changes on Convex.
-
-```typescript
-import { useCachedQueryClient } from "convex-cache/react";
-import { api } from "./convex/_generated/api";
-
-function UserProfile({ userId }) {
-  const user = useCachedQueryClient({
-    query: api.queries.getUser,
-    args: { userId },
-  });
-
-  if (!user) return <div>Loading...</div>;
-
-  return <div>{user.name}</div>;
-}
-```
-
-**Parameters:**
-
-- `query`: The Convex query function reference
-- `args`: The query arguments object
-
-**Returns:** The query result, or `undefined` while loading
-
-#### `useCachedPaginatedQueryClient`
-
-Hook for using cached paginated queries in React client components.
-
-```typescript
-import { useCachedPaginatedQueryClient } from "convex-cache/react";
-import { api } from "./convex/_generated/api";
-
-function UserList() {
-  const { results, status, loadMore } = useCachedPaginatedQueryClient({
-    query: api.queries.listUsers,
-    args: { filter: "active" },
-    options: { initialNumItems: 10 },
-  });
-
-  if (status === "LoadingFirstPage") return <div>Loading...</div>;
-
-  return (
-    <div>
-      {results.map((user) => (
-        <div key={user.id}>{user.name}</div>
-      ))}
-      <button onClick={loadMore}>Load More</button>
-    </div>
-  );
-}
-```
-
-**Parameters:**
-
-- `query`: The Convex paginated query function reference
-- `args`: The query arguments object (excluding pagination options)
-- `options`: Pagination options
-  - `initialNumItems`: Number of items to load initially
-
-**Returns:** An object with:
-
-- `results`: Array of paginated results
-- `status`: Loading status (`"LoadingFirstPage"` | `"CanLoadMore"` | `"Exhausted"`)
-- `loadMore`: Function to load the next page
-- `isLoading`: Boolean indicating if more items are being loaded
-
-### Server Hooks (`convex-cache/next`)
+### Server Cache Hooks (`convex-cache/next`)
 
 #### `useCachedQueryServer`
 
@@ -299,6 +228,77 @@ function UserList({ preloadedData }) {
 - `options`: Pagination options
   - `initialNumItems`: Number of items to load initially
 - `preloadedData`: Preloaded data from `preloadQuery`
+
+**Returns:** An object with:
+
+- `results`: Array of paginated results
+- `status`: Loading status (`"LoadingFirstPage"` | `"CanLoadMore"` | `"Exhausted"`)
+- `loadMore`: Function to load the next page
+- `isLoading`: Boolean indicating if more items are being loaded
+
+### Client Cache Hooks (`convex-cache/react`)
+
+#### `useCachedQueryClient`
+
+Hook for using cached queries in React client components. Results are cached in IndexedDb and automatically revalidated when data changes on Convex.
+
+```typescript
+import { useCachedQueryClient } from "convex-cache/react";
+import { api } from "./convex/_generated/api";
+
+function UserProfile({ userId }) {
+  const user = useCachedQueryClient({
+    query: api.queries.getUser,
+    args: { userId },
+  });
+
+  if (!user) return <div>Loading...</div>;
+
+  return <div>{user.name}</div>;
+}
+```
+
+**Parameters:**
+
+- `query`: The Convex query function reference
+- `args`: The query arguments object
+
+**Returns:** The query result, or `undefined` while loading
+
+#### `useCachedPaginatedQueryClient`
+
+Hook for using cached paginated queries in React client components.
+
+```typescript
+import { useCachedPaginatedQueryClient } from "convex-cache/react";
+import { api } from "./convex/_generated/api";
+
+function UserList() {
+  const { results, status, loadMore } = useCachedPaginatedQueryClient({
+    query: api.queries.listUsers,
+    args: { filter: "active" },
+    options: { initialNumItems: 10 },
+  });
+
+  if (status === "LoadingFirstPage") return <div>Loading...</div>;
+
+  return (
+    <div>
+      {results.map((user) => (
+        <div key={user.id}>{user.name}</div>
+      ))}
+      <button onClick={loadMore}>Load More</button>
+    </div>
+  );
+}
+```
+
+**Parameters:**
+
+- `query`: The Convex paginated query function reference
+- `args`: The query arguments object (excluding pagination options)
+- `options`: Pagination options
+  - `initialNumItems`: Number of items to load initially
 
 **Returns:** An object with:
 
